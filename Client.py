@@ -1,7 +1,8 @@
-
+import json
 
 class Client:
-    def __init__(self, websocket, path):
+    def __init__(self, websocket, path, server):
+        self.server = server
         self.websocket = websocket
         self.path = path
 
@@ -10,15 +11,22 @@ class Client:
             await self.handle_message(message)
 
     async def handle_message(self, message):
-        print(f"Received message from client: {message}")
+        value = json.load(message)
+        if value:
+            if value['type'] == 'EMERGENCY':
+                mac = value['MAC']
+                if not mac:
+                    return
+                print(f"Received message from client: ", mac)
 
-        # Send the message back to the client
-        await self.websocket.send("Message received: " + message)
+                # Send the message back to the client
+                # await self.websocket.send("Message received: " + message)
 
-        # Broadcast the message to all connected clients
-        await self.broadcast(message)
+                broad_msg = json.dumps("")
 
-    async def broadcast(self, message):
-        for client in self.server.clients:
-            if client != self:
-                await client.websocket.send(message)
+                # Broadcast the message to all connected clients
+                await self.server.broadcast(broad_msg)
+            elif value['type'] == 'REQUEST':
+                return
+
+
