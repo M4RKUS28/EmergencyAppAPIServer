@@ -18,7 +18,6 @@ class FirehoseListener:
         self.IP_ADRRESS = s.getsockname()[0]
         s.close()
         self.url = 'http://' + str(self.IP_ADRRESS) + '/update/'
-        self.sqlliteDB = SQLiteDB("./firehoseDB.sqlite")
         self.stop = False
 
         # Tests to see if we already have an API Key
@@ -61,15 +60,16 @@ class FirehoseListener:
                             key = event['deviceLocationUpdate']['ipv4']
                             if key:
                                 # print("Key: ", key)
-                                old = self.sqlliteDB.get(key)
-                                count = self.sqlliteDB.put(key, decoded_line)
-                                if old:
-                                    print(datetime.now(), " - Updated ",
-                                          json.loads(old)['deviceLocationUpdate']['ipv4'], " to: ", key, " count: ", count)
-                                else:
-                                    print(datetime.now(), " - New     ", key, " count: ", count)
-                            else:
-                                print("INVALID KEY: ", decoded_line)
+                                sqlliteDB = SQLiteDB("./firehoseDB.sqlite")
+                                old = sqlliteDB.get(key)
+                                count = sqlliteDB.put(key, decoded_line)
+                                #if old:
+                                    #print(datetime.now(), " - Updated ",
+                                    #      json.loads(old)['deviceLocationUpdate']['ipv4'], " to: ", key, " count: ", count)
+                                #else:
+                                #print(datetime.now(), " - New     ", key, " count: ", count)
+                            #else:
+                            #    print("INVALID KEY: ", decoded_line)
                 if self.stop:
                     print("EXIT FirehoseListener")
                     return

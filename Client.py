@@ -10,10 +10,15 @@ class Client:
 
     async def handler(self):
         async for message in self.websocket:
-            await self.handle_message(message)
+            try:
+                await self.handle_message(message)
+            except Exception as e:
+                print("Error while handling message")
 
     async def handle_message(self, message):
         print("handle_message: ", message)
+        if message == "ping":
+            return
 
         # await self.websocket.send("Message received: " + message)
         value = json.loads(message)
@@ -30,10 +35,10 @@ class Client:
                 data = db.get(ip)
                 if not data:
                     data = "NONE"
-                broad_msg = '{"id": 0, "FLOOR": "Floor 1", "ROOM": "room1", "TYPE": "ALTERT"}'
+                broad_msg = '{"id": 0, "FLOOR": "Floor 3", "ROOM": "Room B41", "TYPE": "FIRE"}'
 
                 # Broadcast the message to all connected clients
-                await self.server.broadcast(broad_msg)
+                await self.server.broadcast(broad_msg, self)
             elif value['TYPE'] == 'REQUEST':
                 return
 

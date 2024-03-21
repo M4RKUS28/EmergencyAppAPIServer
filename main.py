@@ -1,9 +1,8 @@
 import asyncio
-import threading
+from threading import Thread
 import websockets
 import asyncio
 import logging
-import threading
 import websockets
 from concurrent.futures import ThreadPoolExecutor
 
@@ -15,6 +14,8 @@ from Server import Server as Server
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
+
 if __name__ == '__main__':
     port = 8080
     fireHoseListener = FirehoseListener()
@@ -22,11 +23,11 @@ if __name__ == '__main__':
 
     print("Start DB listener")
     # Start another thread
-    #thread = threading.Thread(target=fireHoseListener.start_listening())
-    #thread.start()
+    thread = Thread(target=fireHoseListener.start_listening)
+    thread.start()
 
     try:
-        print("START Server on port ", port)
+        print("START Server on port", port)
         # Start websockets server
 
         start_server = websockets.serve(Server().handler, '0.0.0.0', port)

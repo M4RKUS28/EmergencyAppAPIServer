@@ -12,11 +12,22 @@ class Server:
         return client.handler()
 
     async def handler(self, websocket, path):
-        client = await self.register(websocket, path)
-        self.clients.add(client)
-        print("New Connection: ", client)
+        try:
+            client = await self.register(websocket, path)
+            self.clients.add(client)
+            print("New Connection: ", client)
+        except Exception as e:
+            print("caught exception")
 
-    async def broadcast(self, message):
+    async def broadcast(self, message, this):
+        disconnected_clients = [client for client in self.clients if not client.websocket.open]
+        for client in disconnected_clients:
+            self.clients.remove(client)
+
         for client in self.clients:
-            if client != self:
+            if client is this:
+                continue
+            try:
                 await client.websocket.send(message)
+            except Exception as e:
+                print("Caught Exception: ")
