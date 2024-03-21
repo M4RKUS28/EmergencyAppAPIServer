@@ -17,7 +17,7 @@ class Client:
         value = json.load(message)
         if value:
             if value['type'] == 'EMERGENCY':
-                mac = value['MAC']
+                mac = value['IP']
                 if not mac:
                     return
                 print(f"Received message from client: ", mac)
