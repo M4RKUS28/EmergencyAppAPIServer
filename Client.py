@@ -30,7 +30,7 @@ class Client:
                 data = db.get(ip)
                 if not data:
                     data = "NONE"
-                broad_msg = '"TYPE": "ALTERT", "IP": "ip", "REST": "gh"'
+                broad_msg = '{"TYPE": "ALTERT", "id": 0, "FLOOR": "Floor 1"}'
 
                 # Broadcast the message to all connected clients
                 await self.server.broadcast(broad_msg)
