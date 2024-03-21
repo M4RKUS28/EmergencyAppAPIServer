@@ -20,7 +20,8 @@ class Server:
             print("caught exception")
 
     async def broadcast(self, message, this):
-        disconnected_clients = [client for client in self.clients if not client.websocket.open]
+        disconnected_clients = [client for client in self.clients
+                                if client and client.websocket and not client.websocket.open]
         for client in disconnected_clients:
             self.clients.remove(client)
 
