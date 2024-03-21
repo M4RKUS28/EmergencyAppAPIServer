@@ -58,15 +58,14 @@ class FirehoseListener:
                         event_type = event['eventType']
                         if event_type == 'DEVICE_LOCATION_UPDATE':
                             #print(event_type, datetime.now())
-                            key = event['deviceLocationUpdate']['device']['macAddress']
+                            key = event['deviceLocationUpdate']['ipv4']
                             if key:
                                 # print("Key: ", key)
                                 old = self.sqlliteDB.get(key)
                                 count = self.sqlliteDB.put(key, decoded_line)
                                 if old:
                                     print(datetime.now(), " - Updated ",
-                                          json.loads(old)['deviceLocationUpdate']['device']
-                                          ['macAddress'], " to: ", key, " count: ", count)
+                                          json.loads(old)['deviceLocationUpdate']['ipv4'], " to: ", key, " count: ", count)
                                 else:
                                     print(datetime.now(), " - New     ", key, " count: ", count)
                             else:

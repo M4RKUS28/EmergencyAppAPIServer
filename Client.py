@@ -1,4 +1,6 @@
 import json
+from SQLLiteDB import SQLiteDB
+
 
 class Client:
     def __init__(self, websocket, path, server):
@@ -14,22 +16,25 @@ class Client:
         print("handle_message: ", message)
 
         # await self.websocket.send("Message received: " + message)
-        value = json.load(message)
+        value = json.loads(message)
         if value:
-            if value['type'] == 'EMERGENCY':
-                mac = value['IP']
-                if not mac:
+            if value['TYPE'] == 'EMERGENCY':
+                ip = value['IP']
+                if not ip:
                     return
-                print(f"Received message from client: ", mac)
+                print(f"Received message from client: ", ip)
 
                 # Send the message back to the client
                 # await self.websocket.send("Message received: " + message)
-
-                broad_msg = json.dumps("")
+                db = SQLiteDB("EmergencyAppAPIServer.db")
+                data = db.get(ip)
+                if not data:
+                    data = "NONE"
+                broad_msg = '"TYPE": "ALTERT", "IP": "ip", "REST": "gh"'
 
                 # Broadcast the message to all connected clients
                 await self.server.broadcast(broad_msg)
-            elif value['type'] == 'REQUEST':
+            elif value['TYPE'] == 'REQUEST':
                 return
 
 

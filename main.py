@@ -22,8 +22,8 @@ if __name__ == '__main__':
 
     print("Start DB listener")
     # Start another thread
-    # thread = threading.Thread(target=fireHoseListener.start_listening())
-    #  thread.start()
+    #thread = threading.Thread(target=fireHoseListener.start_listening())
+    #thread.start()
 
     try:
         print("START Server on port ", port)
