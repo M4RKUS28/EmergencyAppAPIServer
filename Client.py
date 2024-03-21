@@ -11,6 +11,9 @@ class Client:
             await self.handle_message(message)
 
     async def handle_message(self, message):
+        print("handle_message: ", message)
+
+        # await self.websocket.send("Message received: " + message)
         value = json.load(message)
         if value:
             if value['type'] == 'EMERGENCY':

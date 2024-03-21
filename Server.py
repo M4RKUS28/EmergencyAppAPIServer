@@ -12,7 +12,9 @@ class Server:
         return client.handler()
 
     async def handler(self, websocket, path):
-        self.clients.add(await self.register(websocket, path))
+        client = await self.register(websocket, path)
+        self.clients.add(client)
+        print("New Connection: ", client)
 
     async def broadcast(self, message):
         for client in self.clients:
